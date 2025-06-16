@@ -16,11 +16,8 @@ app.secret_key = 'secretkey'
 
 # Два SQLite-файла, переключается через session['db_type']
 engine_pg = create_engine('sqlite:///sisyphus_pg.db', echo=False)
-engine_ch = create_engine('sqlite:///sisyphus_ch.db', echo=False)
 SessionPG = sessionmaker(bind=engine_pg)
-SessionCH = sessionmaker(bind=engine_ch)
 Base.metadata.create_all(engine_pg)
-Base.metadata.create_all(engine_ch)
 
 def get_db():
     return SessionCH() if session.get('db_type') == 'clickhouse' else SessionPG()
@@ -72,7 +69,7 @@ def index():
 
 @app.route('/switch_db/<db>')
 def switch_db(db):
-    session['db_type'] = db
+    session['db_type'] = 'postgresql'
     return redirect(url_for('index'))
 
 
