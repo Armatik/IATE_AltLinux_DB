@@ -1,0 +1,35 @@
+{# templates/add_acl.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Добавить ACL-запись</h2>
+  <form method="post" class="row g-3">
+    <div class="col-md-4">
+      <label for="package_id" class="form-label">Пакет</label>
+      <select id="package_id" name="package_id" class="form-select" required>
+        <option value="">— выбрать —</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="maintainer_id" class="form-label">Мейнтейнер</label>
+      <select id="maintainer_id" name="maintainer_id" class="form-select" required>
+        <option value="">— выбрать —</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}">{{ m.nickname }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="role" class="form-label">Роль</label>
+      <input id="role" name="role" class="form-control" required>
+    </div>
+    <div class="col-12 text-end">
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a href="{{ url_for('list_acl') }}" class="btn btn-secondary">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

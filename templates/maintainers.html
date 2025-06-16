@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Мейнтейнеры</h2>
+
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+      <input type="text" name="nickname" value="{{ filters.nickname }}" class="form-control" placeholder="Никнейм">
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="full_name" value="{{ filters.full_name }}" class="form-control" placeholder="Полное имя">
+    </div>
+    <div class="col-md-4">
+      <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <a href="{{ url_for('list_maintainers',
+               sort_by='maintainer_id',
+               sort_dir=('asc' if sort.by!='maintainer_id' or sort.dir=='desc' else 'desc'),
+               nickname=filters.nickname,
+               full_name=filters.full_name) }}">
+            ID {% if sort.by=='maintainer_id' %}{{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_maintainers',
+               sort_by='nickname',
+               sort_dir=('asc' if sort.by!='nickname' or sort.dir=='desc' else 'desc'),
+               nickname=filters.nickname,
+               full_name=filters.full_name) }}">
+            Никнейм {% if sort.by=='nickname' %}{{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_maintainers',
+               sort_by='full_name',
+               sort_dir=('asc' if sort.by!='full_name' or sort.dir=='desc' else 'desc'),
+               nickname=filters.nickname,
+               full_name=filters.full_name) }}">
+            Полное имя {% if sort.by=='full_name' %}{{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in maintainers %}
+      <tr>
+        <td>{{ m.maintainer_id }}</td>
+        <td>{{ m.nickname }}</td>
+        <td>{{ m.full_name }}</td>
+        <td>
+          <a href="{{ url_for('edit_maintainer', id=m.maintainer_id) }}" class="btn btn-sm btn-secondary">Изм.</a>
+          <a href="{{ url_for('delete_maintainer', id=m.maintainer_id) }}" class="btn btn-sm btn-danger"
+             onclick="return confirm('Удалить {{ m.nickname }}?')">Удал.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('add_maintainer') }}" class="btn btn-success">Добавить мейнтейнера</a>
+</div>
+{% endblock %}

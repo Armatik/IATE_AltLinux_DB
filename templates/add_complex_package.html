@@ -1,0 +1,84 @@
+{# templates/add_complex_package.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Комплексное добавление пакета</h2>
+  <form method="post" class="row g-3">
+
+    <div class="col-md-6">
+      <label for="name" class="form-label">Имя пакета</label>
+      <input id="name" name="name" class="form-control" required
+             value="{{ form_data.get('name','') }}">
+    </div>
+
+    <div class="col-md-6">
+      <label for="description" class="form-label">Описание</label>
+      <input id="description" name="description" class="form-control" required
+             value="{{ form_data.get('description','') }}">
+    </div>
+
+    <div class="col-md-4">
+      <label for="maintainer_id" class="form-label">Сопровождающий</label>
+      <select id="maintainer_id" name="maintainer_id" class="form-select" required>
+        <option value="">— выбрать —</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}"
+          {% if form_data.get('maintainer_id')==m.maintainer_id|string %}selected{% endif %}>
+          {{ m.nickname }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="group_name" class="form-label">Группа</label>
+      <select id="group_name" name="group_name" class="form-select" required>
+        <option value="">— выбрать —</option>
+        {% for g in predefined_groups %}
+        <option value="{{ g }}" {% if form_data.get('group_name')==g %}selected{% endif %}>
+          {{ g }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="architectures" class="form-label">Архитектуры</label>
+      {% set arch_list = ['i586','x86_64','aarch64','armh','noarch'] %}
+      <select id="architectures" name="architectures" class="form-select" multiple required>
+        {% for arch in arch_list %}
+        <option value="{{ arch }}"
+          {% if arch in form_data.getlist('architectures') %}selected{% endif %}>
+          {{ arch }}
+        </option>
+        {% endfor %}
+      </select>
+      <div class="form-text">Удерживая Ctrl (Cmd), выберите несколько.</div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="version" class="form-label">Начальная версия</label>
+      <input id="version" name="version" class="form-control" required
+             value="{{ form_data.get('version','') }}">
+    </div>
+
+    <div class="col-md-4">
+      <label for="update_date" class="form-label">Дата обновления</label>
+      <input id="update_date" name="update_date" type="date" class="form-control" required
+             value="{{ form_data.get('update_date','') }}">
+    </div>
+
+    <div class="col-md-4">
+      <label for="changelog" class="form-label">Описание первого обновления</label>
+      <textarea id="changelog" name="changelog" class="form-control" rows="3" required>{{ form_data.get('changelog','') }}</textarea>
+    </div>
+
+    <div class="col-12 text-end">
+      <button type="submit" class="btn btn-primary">Добавить пакет и связи</button>
+      <a href="{{ url_for('list_packages') }}" class="btn btn-secondary">Отмена</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
+

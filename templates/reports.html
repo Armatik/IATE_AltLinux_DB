@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Баг-репорты</h2>
+
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-2">
+      <input type="text" name="report_id" value="{{ filters.report_id }}" class="form-control" placeholder="ID">
+    </div>
+    <div class="col-md-2">
+      <select name="package_id" class="form-select">
+        <option value="">-- пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}" {% if filters.package_id==p.package_id|string %}selected{% endif %}>{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="status" class="form-select">
+        <option value="">-- статус --</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if filters.status==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="resolution" class="form-select">
+        <option value="">-- вердикт --</option>
+        {% for r in resolutions %}
+        <option value="{{ r }}" {% if filters.resolution==r %}selected{% endif %}>{{ r or '—' }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="assignee_id" class="form-select">
+        <option value="">-- исполнитель --</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}" {% if filters.assignee_id==m.maintainer_id|string %}selected{% endif %}>{{ m.nickname }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="text" name="reporter" value="{{ filters.reporter }}" class="form-control" placeholder="Автор">
+    </div>
+
+    <div class="col-12 text-end">
+      <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        {% set cols = [
+          ('id','ID'),('package_id','Пакет'),('status','Статус'),
+          ('resolution','Вердикт'),('assignee_id','Исполнитель'),
+          ('reporter','Автор'),('last_changed','Дата изм.')
+        ] %}
+        {% for field, label in cols %}
+        <th>
+          <a href="{{ url_for('list_reports',
+               sort_by=field,
+               sort_dir=('asc' if sort.by!=field or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            {{ label }}{% if sort.by==field %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        {% endfor %}
+        <th>Краткое описание</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reports %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.package.name }}</td>
+        <td>{{ r.status }}</td>
+        <td>{{ r.resolution or '—' }}</td>
+        <td>{{ r.assignee.nickname }}</td>
+        <td>{{ r.reporter }}</td>
+        <td>{{ r.last_changed.strftime('%Y-%m-%d') if r.last_changed }}</td>
+        <td style="white-space: pre-wrap;">{{ r.summary }}</td>
+        <td>
+          <a href="{{ url_for('edit_report', id=r.id) }}" class="btn btn-sm btn-secondary">Изм.</a>
+          <a href="{{ url_for('delete_report', id=r.id) }}" class="btn btn-sm btn-danger"
+             onclick="return confirm('Удалить отчёт?')">Удал.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{{ url_for('add_report') }}" class="btn btn-success">Добавить баг-репорт</a>
+</div>
+{% endblock %}

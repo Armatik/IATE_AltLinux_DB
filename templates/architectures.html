@@ -1,0 +1,77 @@
+{# templates/architectures.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Архитектуры</h2>
+
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-2">
+      <input type="text" name="arch_id" value="{{ filters.arch_id }}" class="form-control" placeholder="ID">
+    </div>
+    <div class="col-md-2">
+      <select name="package_id" class="form-select">
+        <option value="">-- пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}" {% if filters.package_id==p.package_id|string %}selected{% endif %}>
+          {{ p.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="architecture" value="{{ filters.architecture }}" class="form-control" placeholder="Архитектура">
+    </div>
+    <div class="col-md-4 text-end">
+      <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <a href="{{ url_for('list_architectures',
+               sort_by='arch_id',
+               sort_dir=(sort.by!='arch_id' or sort.dir=='desc') and 'asc' or 'desc',
+               **filters) }}">
+            ID{% if sort.by=='arch_id' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_architectures',
+               sort_by='package_id',
+               sort_dir=(sort.by!='package_id' or sort.dir=='desc') and 'asc' or 'desc',
+               **filters) }}">
+            Пакет{% if sort.by=='package_id' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_architectures',
+               sort_by='architecture',
+               sort_dir=(sort.by!='architecture' or sort.dir=='desc') and 'asc' or 'desc',
+               **filters) }}">
+            Архитектура{% if sort.by=='architecture' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in archs %}
+      <tr>
+        <td>{{ a.arch_id }}</td>
+        <td>{{ a.package.name }}</td>
+        <td>{{ a.architecture }}</td>
+        <td>
+          <a href="{{ url_for('delete_architecture', id=a.arch_id) }}"
+             class="btn btn-sm btn-danger"
+             onclick="return confirm('Удалить архитектуру?')">Удал.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{{ url_for('add_architecture') }}" class="btn btn-success">Добавить архитектуру</a>
+</div>
+{% endblock %}

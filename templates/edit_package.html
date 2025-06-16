@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Редактировать пакет</h2>
+  <form method="post" class="mb-4">
+    <div class="mb-3">
+      <label for="name" class="form-label">Название пакета</label>
+      <input type="text" id="name" name="name" class="form-control" value="{{ pkg.name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Описание пакета</label>
+      <textarea id="description" name="description" class="form-control" rows="4" required>{{ pkg.description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+  </form>
+</div>
+{% endblock %}

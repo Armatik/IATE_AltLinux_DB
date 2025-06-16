@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Баг-репорты</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th><th>Пакет</th><th>Статус</th><th>Резолюция</th><th>Продукт</th>
+        <th>Компонент</th><th>Исполнитель</th><th>Автор</th><th>Краткое описание</th><th>Дата изм.</th><th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bugs %}
+      <tr>
+        <td>{{ b.id }}</td>
+        <td>{{ b.package.name }}</td>
+        <td>{{ b.status }}</td>
+        <td>{{ b.resolution }}</td>
+        <td>{{ b.product }}</td>
+        <td>{{ b.component }}</td>
+        <td>{{ b.assignee }}</td>
+        <td>{{ b.reporter }}</td>
+        <td>{{ b.summary }}</td>
+        <td>{{ b.last_changed.strftime('%Y-%m-%d') if b.last_changed }}</td>
+        <td>
+          <a href="{{ url_for('delete_bug', id=b.id) }}" class="btn btn-sm btn-danger">Удалить</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('add_bug') }}" class="btn btn-success">Добавить баг-репорт</a>
+</div>
+{% endblock %}

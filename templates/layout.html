@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}ALT Sisyphus DB{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">ALT Sisyphus DB</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_packages') }}">Пакеты</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_maintainers') }}">Мейнтейнеры</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_architectures') }}">Архитектуры</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_groups') }}">Группы</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_acl') }}">ACL</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_updates') }}">Обновления</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('list_reports') }}">Баг-репорты</a></li>
+      </ul>
+      {# Переключатель БД: подсвечиваем активную #}
+      <a class="{% if session.get('db_type')=='postgres' %}btn btn-primary me-2{% else %}btn btn-outline-light me-2{% endif %}"
+         href="{{ url_for('switch_db', db='postgres') }}">PostgreSQL</a>
+      <a class="{% if session.get('db_type')=='clickhouse' %}btn btn-primary{% else %}btn btn-outline-light{% endif %}"
+         href="{{ url_for('switch_db', db='clickhouse') }}">ClickHouse</a>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ 'danger' if category=='danger' else 'success' }} alert-dismissible fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

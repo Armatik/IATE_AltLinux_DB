@@ -1,0 +1,41 @@
+{# templates/add_architecture.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Добавить архитектуру пакета</h2>
+  <form method="post" class="mb-4 row g-3">
+    <div class="col-md-6">
+      <label for="package_id" class="form-label">Пакет</label>
+      <select id="package_id" name="package_id" class="form-select" required>
+        <option value="">— выбрать пакет —</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}"
+          {% if form_data.get('package_id')==p.package_id|string %}selected{% endif %}>
+          {{ p.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="architecture" class="form-label">Архитектура</label>
+      <select id="architecture" name="architecture" class="form-select" required>
+        <option value="">— выбрать архитектуру —</option>
+        {% for arch in arch_options %}
+        <option value="{{ arch }}"
+          {% if form_data.get('architecture')==arch %}selected{% endif %}>
+          {{ arch }}
+        </option>
+        {% endfor %}
+      </select>
+      <div class="form-text">
+        Выберите одну из доступных архитектур.
+      </div>
+    </div>
+    <div class="col-12 text-end">
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a href="{{ url_for('list_architectures') }}" class="btn btn-secondary">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

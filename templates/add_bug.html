@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Добавить баг-репорт</h2>
+  <form method="post" class="mb-4">
+    <div class="mb-3">
+      <label for="package_id" class="form-label">Пакет</label>
+      <select id="package_id" name="package_id" class="form-select" required>
+        <option value="">-- выбрать пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="status" class="form-label">Статус</label>
+      <input type="text" id="status" name="status" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="resolution" class="form-label">Резолюция</label>
+      <input type="text" id="resolution" name="resolution" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="product" class="form-label">Продукт</label>
+      <input type="text" id="product" name="product" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="component" class="form-label">Компонент</label>
+      <input type="text" id="component" name="component" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="assignee" class="form-label">Исполнитель</label>
+      <input type="text" id="assignee" name="assignee" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="reporter" class="form-label">Автор отчёта</label>
+      <input type="text" id="reporter" name="reporter" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="summary" class="form-label">Краткое описание</label>
+      <textarea id="summary" name="summary" class="form-control" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="last_changed" class="form-label">Дата последнего изменения</label>
+      <input type="date" id="last_changed" name="last_changed" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+{% endblock %}

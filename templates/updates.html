@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Обновления</h2>
+
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-2">
+      <input type="text" name="update_id" value="{{ filters.update_id }}" class="form-control" placeholder="ID">
+    </div>
+    <div class="col-md-2">
+      <select name="package_id" class="form-select">
+        <option value="">-- пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}" {% if filters.package_id==p.package_id|string %}selected{% endif %}>{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="updater_id" class="form-select">
+        <option value="">-- мейнтейнер --</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}" {% if filters.updater_id==m.maintainer_id|string %}selected{% endif %}>{{ m.nickname }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="text" name="update_version" value="{{ filters.update_version }}" class="form-control" placeholder="Версия">
+    </div>
+    <div class="col-md-2">
+      <input type="date" name="update_date" value="{{ filters.update_date }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <a href="{{ url_for('list_updates',
+               sort_by='update_id', sort_dir=('asc' if sort.by!='update_id' or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            ID{% if sort.by=='update_id' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_updates',
+               sort_by='package_id', sort_dir=('asc' if sort.by!='package_id' or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            Пакет{% if sort.by=='package_id' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_updates',
+               sort_by='updater_id', sort_dir=('asc' if sort.by!='updater_id' or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            Мейнтейнер{% if sort.by=='updater_id' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_updates',
+               sort_by='update_version', sort_dir=('asc' if sort.by!='update_version' or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            Версия{% if sort.by=='update_version' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="{{ url_for('list_updates',
+               sort_by='update_date', sort_dir=('asc' if sort.by!='update_date' or sort.dir=='desc' else 'desc'),
+               **filters) }}">
+            Дата{% if sort.by=='update_date' %} {{ sort.dir=='asc' and '↑' or '↓' }}{% endif %}
+          </a>
+        </th>
+        <th>Описание</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in updates %}
+      <tr>
+        <td>{{ u.update_id }}</td>
+        <td>{{ u.package.name }}</td>
+        <td>{{ u.updater.nickname }}</td>
+        <td>{{ u.update_version }}</td>
+        <td>{{ u.update_date.strftime('%Y-%m-%d') }}</td>
+        <td>{{ u.changelog }}</td>
+        <td>
+          <a href="{{ url_for('delete_update', id=u.update_id) }}" class="btn btn-sm btn-danger"
+             onclick="return confirm('Удалить обновление?')">Удал.</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{{ url_for('add_update') }}" class="btn btn-success">Добавить обновление</a>
+</div>
+{% endblock %}

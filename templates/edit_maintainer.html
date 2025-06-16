@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Редактировать мейнтейнера</h2>
+  <form method="post" class="mb-4">
+    <div class="mb-3">
+      <label for="nickname" class="form-label">Никнейм</label>
+      <input type="text" id="nickname" name="nickname" value="{{ maintainer.nickname }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="full_name" class="form-label">Полное имя</label>
+      <input type="text" id="full_name" name="full_name" value="{{ maintainer.full_name }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+  </form>
+</div>
+{% endblock %}

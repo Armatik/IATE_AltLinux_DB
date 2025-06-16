@@ -1,0 +1,47 @@
+{# templates/add_update.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Добавить обновление</h2>
+  <form method="post" class="mb-4">
+    <div class="mb-3">
+      <label for="package_id" class="form-label">Пакет</label>
+      <select id="package_id" name="package_id" class="form-select" required>
+        <option value="">-- выбрать пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="updater_id" class="form-label">Мейнтейнер</label>
+      <select id="updater_id" name="updater_id" class="form-select" required>
+        <option value="">-- выбрать мейнтейнера --</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}">{{ m.nickname }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="update_version" class="form-label">Версия</label>
+      <input type="text" id="update_version" name="update_version" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="update_date" class="form-label">Дата обновления</label>
+      <input type="date"
+             id="update_date"
+             name="update_date"
+             class="form-control"
+             required
+             min="{{ date_min }}"
+             max="{{ date_max }}">
+    </div>
+    <div class="mb-3">
+      <label for="changelog" class="form-label">Changelog</label>
+      <textarea id="changelog" name="changelog" class="form-control" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+{% endblock %}
+

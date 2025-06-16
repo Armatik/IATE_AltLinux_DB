@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Добавить баг-репорт</h2>
+  <form method="post" class="mb-4">
+
+    <div class="mb-3">
+      <label for="package_id" class="form-label">Пакет</label>
+      <select id="package_id" name="package_id" class="form-select" required>
+        <option value="">-- выбрать пакет --</option>
+        {% for p in packages %}
+        <option value="{{ p.package_id }}" {% if form_data.get('package_id')==p.package_id|string %}selected{% endif %}>
+          {{ p.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="status" class="form-label">Статус</label>
+      <select id="status" name="status" class="form-select" required>
+        <option value="">-- выбрать статус --</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if form_data.get('status')==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="resolution" class="form-label">Вердикт (резолюция)</label>
+      <select id="resolution" name="resolution" class="form-select">
+        <option value="">-- без вердикта --</option>
+        {% for r in resolutions %}
+        <option value="{{ r }}" {% if form_data.get('resolution')==r %}selected{% endif %}>{{ r }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="assignee_id" class="form-label">Исполнитель</label>
+      <select id="assignee_id" name="assignee_id" class="form-select" required>
+        <option value="">-- выбрать мейнтейнера --</option>
+        {% for m in maintainers %}
+        <option value="{{ m.maintainer_id }}" {% if form_data.get('assignee_id')==m.maintainer_id|string %}selected{% endif %}>
+          {{ m.nickname }} ({{ m.full_name }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="reporter" class="form-label">Автор отчёта</label>
+      <input type="text" id="reporter" name="reporter" class="form-control" required
+             value="{{ form_data.get('reporter','') }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="summary" class="form-label">Краткое описание</label>
+      <textarea id="summary" name="summary" class="form-control" rows="3" required>{{ form_data.get('summary','') }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="last_changed" class="form-label">Дата последнего изменения</label>
+      <input type="date"
+             id="last_changed"
+             name="last_changed"
+             class="form-control"
+             min="2001-01-01"
+             max="{{ date_max }}"
+             value="{{ form_data.get('last_changed','') }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+{% endblock %}

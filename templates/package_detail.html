@@ -1,0 +1,90 @@
+{# templates/package_detail.html #}
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Пакет «{{ pkg.name }}» (ID {{ pkg.package_id }})</h2>
+  <p><strong>Описание:</strong> {{ pkg.description }}</p>
+  <hr>
+
+  <h4>Сопровождающие</h4>
+  {% if acl_entries %}
+    <ul>
+      {% for e in acl_entries %}
+        <li><strong>{{ e.maintainer.nickname }}</strong> (роль: {{ e.role }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Нет записей ACL.</p>
+  {% endif %}
+
+  <h4>Группы</h4>
+  {% if groups %}
+    <ul>
+      {% for g in groups %}
+        <li>{{ g.group_name }} (ID {{ g.group_id }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Нет групп.</p>
+  {% endif %}
+
+  <h4>Архитектуры</h4>
+  {% if architectures %}
+    <ul>
+      {% for a in architectures %}
+        <li>{{ a.architecture }} (ID {{ a.arch_id }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Нет архитектур.</p>
+  {% endif %}
+
+  <h4>История обновлений</h4>
+  {% if updates %}
+    <table class="table table-sm">
+      <thead>
+        <tr><th>ID</th><th>Версия</th><th>Дата</th><th>Описание</th></tr>
+      </thead>
+      <tbody>
+        {% for u in updates %}
+        <tr>
+          <td>{{ u.update_id }}</td>
+          <td>{{ u.update_version }}</td>
+          <td>{{ u.update_date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ u.changelog }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">Нет обновлений.</p>
+  {% endif %}
+
+  <h4>Баг-репорты</h4>
+  {% if bugs %}
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>ID</th><th>Статус</th><th>Резолюция</th><th>Исполнитель</th><th>Автор</th><th>Кратко</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bugs %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td>{{ b.status }}</td>
+          <td>{{ b.resolution or '—' }}</td>
+          <td>{{ b.assignee.nickname if b.assignee else b.assignee_id }}</td>
+          <td>{{ b.reporter }}</td>
+          <td>{{ b.summary }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">Нет баг-репортов.</p>
+  {% endif %}
+
+  <a href="{{ url_for('list_packages') }}" class="btn btn-secondary mt-3">← К списку пакетов</a>
+</div>
+{% endblock %}
